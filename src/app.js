@@ -33,6 +33,7 @@ app.post("/products/cart", (request, response) => {
   const { title, value } = request.body;
 
   const product = {
+    id: uuid(), 
     title, 
     value
   }
@@ -40,6 +41,20 @@ app.post("/products/cart", (request, response) => {
   cart.push(product);
 
   return response.json(product);
+});
+
+app.delete("/products/cart/:id", (request, response) => {
+  const { id } = request.params;
+
+  const productIndex = cart.findIndex(product => product.id === id);
+
+  if (productIndex === -1) {
+    return response.status(400).send();
+  } 
+
+  cart.splice(productIndex, 1);
+  
+  return response.status(204).send();
 });
 
 app.get("/products/cart", (request, response) => {
@@ -80,5 +95,7 @@ app.delete("/products/:id", (request, response) => {
   
   return response.status(204).send();
 });
+
+
 
 module.exports = app;
